@@ -1,0 +1,12 @@
+# this file was generated, do not edit directly
+version: "3"
+services:
+  caddy:
+    image: caddy
+    ports:
+      - 80:80
+    volumes:
+      - $PWD/Caddyfile:/etc/caddy/Caddyfile
+      - $PWD/site:/srv
+  echo:
+    image: ealen/echo-server

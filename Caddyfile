@@ -1,0 +1,7 @@
+# this file was generated, do not edit directly
+:80 {
+	reverse_proxy echo:80
+}
+http://echo.localhost {
+	reverse_proxy echo:80
+}
