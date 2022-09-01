@@ -5,3 +5,6 @@
 http://jellyfin.localhost {
 	reverse_proxy jellyfin__main:8096
 }
+http://nextcloud.localhost {
+	reverse_proxy nextcloud__main:80
+}
