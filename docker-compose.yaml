@@ -8,5 +8,8 @@ services:
     volumes:
       - $PWD/Caddyfile:/etc/caddy/Caddyfile
       - $PWD/site:/srv
-  echo:
-    image: ealen/echo-server
+  jellyfin__main:
+    image: jellyfin/jellyfin
+    volumes:
+      - $PWD/data/jellyfin/config:/config
+      - $PWD/data/jellyfin/cache:/cache
