@@ -8,13 +8,16 @@ services:
       - 443:443
     volumes:
       - $PWD/Caddyfile:/etc/caddy/Caddyfile
+    labels:
+      hs__pod: support
 
   # docs: https://jellyfin.org/docs/general/administration/installing.html#docker
   # src: https://hub.docker.com/r/jellyfin/jellyfin
-  jellyfin__main:
+  jellyfin:
     image: jellyfin/jellyfin
     volumes:
-      - $PWD/data/jellyfin/config:/config
-      - $PWD/data/jellyfin/cache:/cache
+      - /hs/jellyfin/config:/config
+      - /hs/jellyfin/cache:/cache
+      - /media:/media
     labels:
       hs__pod: jellyfin
