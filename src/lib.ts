@@ -5,6 +5,7 @@ type ContainerOpts = {
   volumes?: { host: string; container: string }[];
   environment?: Record<string, string>;
   dependsOn?: Container[];
+  labels?: Record<string, string>;
 };
 
 type HcPair = { host: string | number; container: string | number };
@@ -20,6 +21,7 @@ export class Container {
   volumes?: HcPair[];
   environment?: Record<string, string>;
   dependsOn?: Container[];
+  labels: Record<string, string>;
 
   constructor(opts: ContainerOpts) {
     this.name = opts.name;
@@ -28,6 +30,7 @@ export class Container {
     this.volumes = opts.volumes;
     this.environment = opts.environment;
     this.dependsOn = opts.dependsOn;
+    this.labels = opts.labels ?? {};
   }
 
   dockerConfig() {
@@ -46,6 +49,7 @@ export class Container {
         ...volumes,
         ...env,
         ...deps,
+        labels: this.labels,
       },
     };
   }
@@ -73,6 +77,7 @@ export class Pod {
     this.containers = opts.containers;
     this.containers.forEach((container) => {
       container.name = `${this.name}__${container.name}`;
+      container.labels.hs__pod = this.name;
     });
     this.exposed = opts.expose;
   }
