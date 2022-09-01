@@ -1,3 +1,16 @@
 jellyfin.h.jackrose.co.nz {
 	reverse_proxy jellyfin:8096
 }
+
+sonarr.h.jackrose.co.nz {
+	reverse_proxy gluetun:8989
+}
+radarr.h.jackrose.co.nz {
+	reverse_proxy gluetun:7878
+}
+prowlarr.h.jackrose.co.nz {
+	reverse_proxy gluetun:9696
+}
+qbittorrent.h.jackrose.co.nz {
+	reverse_proxy gluetun:8080
+}

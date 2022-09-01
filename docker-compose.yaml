@@ -2,22 +2,97 @@ version: "3"
 services:
   # src: https://registry.hub.docker.com/_/caddy
   caddy:
-    image: caddy
+    image: caddy:latest
     ports:
       - 80:80
       - 443:443
     volumes:
       - $PWD/Caddyfile:/etc/caddy/Caddyfile
+      - /hs/caddy/data:/data
     labels:
       hs__pod: support
 
   # docs: https://jellyfin.org/docs/general/administration/installing.html#docker
   # src: https://hub.docker.com/r/jellyfin/jellyfin
   jellyfin:
-    image: jellyfin/jellyfin
+    image: jellyfin/jellyfin:latest
     volumes:
       - /hs/jellyfin/config:/config
       - /hs/jellyfin/cache:/cache
       - /media:/media
     labels:
       hs__pod: jellyfin
+
+  # Setup a wiregaurd VPN that other containers can connect to by
+  # using `network_mode: "container:gluetun"`. This will tell those
+  # containers to share this network stack, meaning all services
+  # connected to this VPN must have distinct ports, and those ports
+  # now have to accessed via gluetun's name instead of their own
+  #
+  # docs: https://github.com/qdm12/gluetun/wiki/Connect-a-container-to-gluetun
+  # src: https://hub.docker.com/r/qmcgaw/gluetun
+  gluetun:
+    container_name: gluetun # required for containers to connect
+    image: qmcgaw/gluetun
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - VPN_SERVICE_PROVIDER=mullvad
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY:?required}
+      - WIREGUARD_ADDRESSES=10.64.201.123/32
+      - SERVER_CITIES=Los Angeles CA
+      - TZ=Australia/Melbourne
+
+  # These containers are all tightly coupled by their use of the
+  # "data" directory, this needs to be one mount shared across all so
+  # the programs can moved downloaded files around and hardlink them
+  # when they're complete but seeding.
+  #
+  # src: https://github.com/Luctia/ezarr/blob/main/docker-compose.yml
+  radarr:
+    network_mode: "container:gluetun"
+    image: lscr.io/linuxserver/radarr:latest
+    environment:
+      - PUID=0
+      - PGID=0 # FIXME permissions
+      - TZ=Australia/Melbourne
+    volumes:
+      - /hs/radarr/config:/config
+      - /media/data:/data # FIXME these should probably all map /media to /data, but I don't want to override anything yet
+    labels:
+      hs__pod: servarr
+  sonarr:
+    network_mode: "container:gluetun"
+    image: lscr.io/linuxserver/sonarr:latest
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Australia/Melbourne
+    volumes:
+      - /hs/sonarr/config:/config
+      - /media/data:/data
+    labels:
+      hs__pod: servarr
+  prowlarr:
+    network_mode: "container:gluetun"
+    image: lscr.io/linuxserver/prowlarr:develop
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Australia/Melbourne
+    volumes:
+      - /hs/prowlarr/config:/config
+  qbittorrent:
+    network_mode: "container:gluetun"
+    image: lscr.io/linuxserver/qbittorrent:latest
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Australia/Melbourne
+      - WEBUI_PORT=8080
+    volumes:
+      - /hs/qbittorrent/config:/config
+      - /media/data/downloads:/downloads
+    labels:
+      hs__pod: servarr
