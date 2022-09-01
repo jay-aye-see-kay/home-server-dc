@@ -1,12 +1,20 @@
-# this file was generated, do not edit directly
 version: "3"
 services:
+  # src: https://registry.hub.docker.com/_/caddy
   caddy:
     image: caddy
     ports:
       - 80:80
+      - 443:443
     volumes:
       - $PWD/Caddyfile:/etc/caddy/Caddyfile
-      - $PWD/site:/srv
-  echo:
-    image: ealen/echo-server
+
+  # docs: https://jellyfin.org/docs/general/administration/installing.html#docker
+  # src: https://hub.docker.com/r/jellyfin/jellyfin
+  jellyfin__main:
+    image: jellyfin/jellyfin
+    volumes:
+      - $PWD/data/jellyfin/config:/config
+      - $PWD/data/jellyfin/cache:/cache
+    labels:
+      hs__pod: jellyfin
