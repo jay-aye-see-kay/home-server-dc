@@ -2,6 +2,9 @@
 :80 {
 	reverse_proxy echo:80
 }
-http://echo.localhost {
-	reverse_proxy echo:80
+http://jellyfin.localhost {
+	reverse_proxy jellyfin__main:8096
+}
+http://nextcloud.localhost {
+	reverse_proxy nextcloud__main:80
 }

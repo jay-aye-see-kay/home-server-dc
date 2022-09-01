@@ -2,11 +2,41 @@
 version: "3"
 services:
   caddy:
+    container_name: hs__caddy
     image: caddy
     ports:
       - 80:80
     volumes:
       - $PWD/Caddyfile:/etc/caddy/Caddyfile
       - $PWD/site:/srv
-  echo:
-    image: ealen/echo-server
+    labels: {}
+  jellyfin__main:
+    container_name: hs__jellyfin__main
+    image: jellyfin/jellyfin
+    volumes:
+      - $PWD/data/jellyfin/config:/config
+      - $PWD/data/jellyfin/cache:/cache
+    labels:
+      hs__pod: jellyfin
+  nextcloud__main:
+    container_name: hs__nextcloud__main
+    image: nextcloud:24
+    volumes: []
+    environment:
+      POSTGRES_HOST: nextcloud__db
+      POSTGRES_DB: postgres_db
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: postgres_password
+    depends_on:
+      - nextcloud__db
+    labels:
+      hs__pod: nextcloud
+  nextcloud__db:
+    container_name: hs__nextcloud__db
+    image: postgres:14
+    environment:
+      POSTGRES_DB: postgres_db
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: postgres_password
+    labels:
+      hs__pod: nextcloud
