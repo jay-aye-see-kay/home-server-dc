@@ -24,7 +24,7 @@ services:
       hs__pod: jellyfin
 
   # Setup a wiregaurd VPN that other containers can connect to by
-  # using `network_mode: "container:gluetun"`. This will tell those
+  # using `network_mode: "service:gluetun"`. This will tell those
   # containers to share this network stack, meaning all services
   # connected to this VPN must have distinct ports, and those ports
   # now have to accessed via gluetun's name instead of their own
@@ -36,6 +36,8 @@ services:
     image: qmcgaw/gluetun
     cap_add:
       - NET_ADMIN
+    volumes:
+      - /hs/gluetun/config:/gluetun
     environment:
       - VPN_SERVICE_PROVIDER=mullvad
       - VPN_TYPE=wireguard
@@ -51,7 +53,7 @@ services:
   #
   # src: https://github.com/Luctia/ezarr/blob/main/docker-compose.yml
   radarr:
-    network_mode: "container:gluetun"
+    network_mode: "service:gluetun"
     image: lscr.io/linuxserver/radarr:latest
     environment:
       - PUID=0
@@ -59,11 +61,11 @@ services:
       - TZ=Australia/Melbourne
     volumes:
       - /hs/radarr/config:/config
-      - /media/data:/data # FIXME these should probably all map /media to /data, but I don't want to override anything yet
+      - /media/data:/data
     labels:
       hs__pod: servarr
   sonarr:
-    network_mode: "container:gluetun"
+    network_mode: "service:gluetun"
     image: lscr.io/linuxserver/sonarr:latest
     environment:
       - PUID=0
@@ -75,7 +77,7 @@ services:
     labels:
       hs__pod: servarr
   prowlarr:
-    network_mode: "container:gluetun"
+    network_mode: "service:gluetun"
     image: lscr.io/linuxserver/prowlarr:develop
     environment:
       - PUID=0
@@ -84,7 +86,7 @@ services:
     volumes:
       - /hs/prowlarr/config:/config
   qbittorrent:
-    network_mode: "container:gluetun"
+    network_mode: "service:gluetun"
     image: lscr.io/linuxserver/qbittorrent:latest
     environment:
       - PUID=0
