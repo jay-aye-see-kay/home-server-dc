@@ -14,3 +14,7 @@ prowlarr.h.jackrose.co.nz {
 qbittorrent.h.jackrose.co.nz {
 	reverse_proxy gluetun:8080
 }
+
+mealie.h.jackrose.co.nz {
+	reverse_proxy mealie:80
+}

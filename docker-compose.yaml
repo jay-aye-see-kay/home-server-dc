@@ -98,3 +98,12 @@ services:
       - /media/data/downloads:/downloads
     labels:
       hs__pod: servarr
+
+  # docs: https://docs.mealie.io/
+  # src: https://registry.hub.docker.com/r/hkotel/mealie
+  mealie:
+    image: hkotel/mealie:latest
+    volumes:
+      - /hs/mealie/data:/app/data
+    environment:
+      - TZ=Australia/Melbourne
