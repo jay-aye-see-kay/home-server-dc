@@ -18,3 +18,7 @@ qbittorrent.h.jackrose.co.nz {
 mealie.h.jackrose.co.nz {
 	reverse_proxy mealie:80
 }
+
+wallabag.h.jackrose.co.nz {
+	reverse_proxy wallabag:80
+}
