@@ -22,3 +22,7 @@ mealie.h.jackrose.co.nz {
 wallabag.h.jackrose.co.nz {
 	reverse_proxy wallabag:80
 }
+
+hass.h.jackrose.co.nz {
+	reverse_proxy home-assistant:8123
+}
