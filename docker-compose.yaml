@@ -3,6 +3,7 @@ services:
   # src: https://registry.hub.docker.com/_/caddy
   caddy:
     image: caddy:latest
+    restart: unless-stopped
     ports:
       - 80:80
       - 443:443
@@ -16,6 +17,7 @@ services:
   # src: https://hub.docker.com/r/jellyfin/jellyfin
   jellyfin:
     image: jellyfin/jellyfin:latest
+    restart: unless-stopped
     volumes:
       - /hs/jellyfin/config:/config
       - /hs/jellyfin/cache:/cache
@@ -34,6 +36,7 @@ services:
   gluetun:
     container_name: gluetun # required for containers to connect
     image: qmcgaw/gluetun
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
     volumes:
@@ -55,6 +58,7 @@ services:
   radarr:
     network_mode: "service:gluetun"
     image: lscr.io/linuxserver/radarr:latest
+    restart: unless-stopped
     environment:
       - PUID=0
       - PGID=0 # FIXME permissions
@@ -67,6 +71,7 @@ services:
   sonarr:
     network_mode: "service:gluetun"
     image: lscr.io/linuxserver/sonarr:latest
+    restart: unless-stopped
     environment:
       - PUID=0
       - PGID=0
@@ -79,6 +84,7 @@ services:
   prowlarr:
     network_mode: "service:gluetun"
     image: lscr.io/linuxserver/prowlarr:develop
+    restart: unless-stopped
     environment:
       - PUID=0
       - PGID=0
@@ -88,6 +94,7 @@ services:
   qbittorrent:
     network_mode: "service:gluetun"
     image: lscr.io/linuxserver/qbittorrent:latest
+    restart: unless-stopped
     environment:
       - PUID=0
       - PGID=0
@@ -103,6 +110,7 @@ services:
   # src: https://registry.hub.docker.com/r/hkotel/mealie
   mealie:
     image: hkotel/mealie:latest
+    restart: unless-stopped
     volumes:
       - /hs/mealie/data:/app/data
     environment:
@@ -112,6 +120,7 @@ services:
   # src: https://hub.docker.com/r/wallabag/wallabag/
   wallabag:
     image: wallabag/wallabag
+    restart: unless-stopped
     environment:
       - SYMFONY__ENV__DATABASE_DRIVER=pdo_pgsql
       - SYMFONY__ENV__DATABASE_HOST=wallabag_db
@@ -138,6 +147,7 @@ services:
       hs__pod: wallabag
   wallabag_db:
     image: postgres:9.6
+    restart: unless-stopped
     environment:
       - POSTGRES_USER=wallabag-super-user
       - POSTGRES_PASSWORD=${WALLABAG_DB_PASSWORD:?required}
@@ -147,6 +157,7 @@ services:
       hs__pod: wallabag
   wallabag_redis:
     image: redis:alpine
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 20s
