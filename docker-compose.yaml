@@ -189,3 +189,13 @@ services:
       - TZ=Australia/Melbourne
     labels:
       hs__pod: home-assistant
+  nodered:
+    build:
+      context: images/nodered
+    restart: unless-stopped
+    volumes:
+      - /hs/nodered/data:/data
+    environment:
+      - TZ=Australia/Melbourne
+    labels:
+      hs__pod: home-assistant

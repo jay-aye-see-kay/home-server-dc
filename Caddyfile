@@ -26,3 +26,6 @@ wallabag.h.jackrose.co.nz {
 hass.h.jackrose.co.nz {
 	reverse_proxy home-assistant:8123
 }
+nodered.h.jackrose.co.nz {
+	reverse_proxy nodered:1880
+}
