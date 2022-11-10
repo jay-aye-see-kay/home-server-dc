@@ -1,0 +1,12 @@
+{
+  "domainName": "rosalies-swamp.mc.jackrose.co.nz",
+  "proxyTo": "rosalies-swamp:25565",
+  "docker": {
+    "containerName": "mc_rosalies-swamp",
+    "timeout": 300000
+  },
+  "disconnectMessage": "{{domain}} is waking up!",
+  "offlineStatus": {
+    "motd": "[sleeping] join to wake, takes ~10sec"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "domainName": "pixelmon.mc.jackrose.co.nz",
+  "proxyTo": "pixelmon:25565",
+  "docker": {
+    "containerName": "mc_pixelmon",
+    "timeout": 300000
+  },
+  "disconnectMessage": "{{domain}} is waking up!",
+  "offlineStatus": {
+    "motd": "[sleeping] join to wake, takes ~10sec"
+  }
+}

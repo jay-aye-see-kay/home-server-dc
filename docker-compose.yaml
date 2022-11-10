@@ -199,3 +199,50 @@ services:
       - TZ=Australia/Melbourne
     labels:
       hs__pod: home-assistant
+
+  # docs: https://github.com/haveachin/infrared
+  # docs: https://github.com/itzg/docker-minecraft-server
+  infrared:
+    restart: unless-stopped
+    image: haveachin/infrared
+    volumes:
+      - ./minecraft-proxy-configs:/configs
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 25565:25565
+    labels:
+      hs__pod: minecraft-server
+  rosalies-swamp:
+    container_name: mc_rosalies-swamp
+    image: itzg/minecraft-server:java17
+    restart: unless-stopped
+    volumes:
+      - /hs/minecraft/rosalies-swamp:/data
+    environment:
+      MOTD: "Rosalie's Swamp"
+      TZ: "Australia/Melbourne"
+      EULA: "TRUE"
+      MAX_MEMORY: "3G"
+      TYPE: "PAPER"
+      OVERRIDE_SERVER_PROPERTIES: "TRUE"
+    labels:
+      hs__pod: minecraft-server
+      startstopped: true
+  pixelmon:
+    container_name: mc_pixelmon
+    image: itzg/minecraft-server:java8
+    restart: unless-stopped
+    volumes:
+      - /hs/minecraft/pixelmon:/data
+    environment:
+      MOTD: "Pixelmon"
+      TZ: "Australia/Melbourne"
+      EULA: "TRUE"
+      MAX_MEMORY: "3G"
+      OVERRIDE_SERVER_PROPERTIES: "TRUE"
+      VERSION: "1.12.2"
+      TYPE: "CURSEFORGE"
+      CF_SERVER_MOD: "serverpack836.zip"
+    labels:
+      hs__pod: minecraft-server
+      startstopped: true
